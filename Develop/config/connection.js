@@ -1,19 +1,15 @@
-import { Sequelize } from "sequelize";
-import config from "./config.js";
+const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize(
-  config.db.name,
-  config.db.user,
-  config.db.password,
-  { host: "localhost", dialect: "mysql" }
-);
+require('dotenv').config();
 
-await sequelize.authenticate().catch((err) => {
-  console.error("Unable to connect to the database:", err.message);
-  process.exit(1);
-});
+const sequelize = process.env.JAWSDB_URL
+  ? new Sequelize(process.env.JAWSDB_URL)
+  : new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PW, {
+      host: 'localhost',
+      dialect: 'mysql',
+      dialectOptions: {
+        decimalNumbers: true,
+      },
+    });
 
-console.log("Connection has been established succesfully");
-
-export default sequelize;
-
+module.exports = sequelize;
